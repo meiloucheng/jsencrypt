@@ -233,6 +233,13 @@ export class RSAKey {
         return pkcs1unpad2(m, (this.n.bitLength() + 7) >> 3);
     }
 
+    public decryptPublic(ctext:string) {
+        const c = parseBigInt(ctext, 16);
+        const m = this.doPublic(c);
+        if (m == null) { return null; }
+        return pkcs1unpad2Public(m, (this.n.bitLength() + 7) >> 3);
+    }
+
     // Generate a new random private key B bits long, using public expt E
     public generateAsync(B:number, E:string, callback:() => void) {
         const rng = new SecureRandom();
@@ -363,6 +370,34 @@ function pkcs1unpad2(d:BigInteger, n:number):string {
     }
     return ret;
 }
+
+function pkcs1unpad2Public(d:BigInteger, n:number):string {
+    const b = d.toByteArray();
+    let i = 0;
+    while (i < b.length && b[i] == 0) { ++i; }
+    // if (b.length - i != n - 1 || b[i] != 2) {
+    //     return null;
+    // }
+    ++i;
+    while (b[i] != 0) {
+        if (++i >= b.length) { return null; }
+    }
+    let ret = "";
+    while (++i < b.length) {
+        const c = b[i] & 255;
+        if (c < 128) { // utf-8 decode
+            ret += String.fromCharCode(c);
+        } else if ((c > 191) && (c < 224)) {
+            ret += String.fromCharCode(((c & 31) << 6) | (b[i + 1] & 63));
+            ++i;
+        } else {
+            ret += String.fromCharCode(((c & 15) << 12) | ((b[i + 1] & 63) << 6) | (b[i + 2] & 63));
+            i += 2;
+        }
+    }
+    return ret;
+}
+
 
 // https://tools.ietf.org/html/rfc3447#page-43
 const DIGEST_HEADERS:{ [name:string]:string } = {

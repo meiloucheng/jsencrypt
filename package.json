@@ -1,5 +1,5 @@
 {
-  "name": "jsencrypt",
+  "name": "@meiloucheng/jsencrypt",
   "version": "3.2.1",
   "description": "A Javascript library to perform OpenSSL RSA Encryption, Decryption, and Key Generation.",
   "main": "bin/jsencrypt.js",
@@ -40,7 +40,7 @@
   "homepage": "http://www.travistidwell.com/jsencrypt",
   "repository": {
     "type": "git",
-    "url": "git://github.com/travist/jsencrypt.git"
+    "url": "git://github.com/meiloucheng/jsencrypt.git"
   },
   "bugs": {
     "url": "http://github.com/travist/jsencrypt/issues"
