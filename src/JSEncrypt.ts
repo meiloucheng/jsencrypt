@@ -83,6 +83,14 @@ export class JSEncrypt {
             return false;
         }
     }
+    public decryptPublic(str:string) {
+        // Return the decrypted string.
+        try {
+            return this.getKey().decryptPublic(b64tohex(str));
+        } catch (ex) {
+            return false;
+        }
+    }
 
     /**
      * Proxy method for RSAKey object's encrypt, encrypt the string using the public
